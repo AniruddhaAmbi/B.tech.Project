@@ -1,0 +1,62 @@
+DOCIQ App Shell make it responsive: 
+Desktop: full sidebar
+Tablet: collapsed sidebar
+Mobile: sidebar becomes a drawer/bottom navigation
+
+┌──────────────┬─────────────────────────────┐
+│              │ Topbar                      │
+│   Sidebar    ├─────────────────────────────┤
+│              │                             │
+│ Dashboard    │                             │
+│ AI Analyst   │      Page Content           │
+│ Data Sources │                             │
+│ Analysis     │                             │
+│ Reports      │                             │
+│ Settings     │                             │
+│              │                             │
+└──────────────┴─────────────────────────────┘
+
+
+We should not build Dashboard content yet.
+
+Our immediate coding sequence
+
+Step 1 → AppShell.jsx
+Step 2 → Sidebar.jsx
+Step 3 → Topbar.jsx
+Step 4 → responsive behavior
+Step 5 → DOCIQ colors/theme
+Step 6 → routing between empty pages
+
+Once that works, every page we build afterward automatically gets the same professional shell.
+
+So yes — let's start with the App Shell.
+
+
+
+AI Analyst page:
+
+AI ANALYST
+
+Ask DOCIQ
+────────────────────────────────────────────
+
+"Ask anything about your business data..."
+
+                         [Ask AI]
+
+────────────────────────────────────────────
+
+Suggested questions
+
+• Why did revenue change this month?
+• Which products are performing best?
+• Who are my highest-value customers?
+• What should I focus on this month?
+
+────────────────────────────────────────────
+
+Recent conversations
+
+[question]                         [date]
+[question]                         [date]
