@@ -2,14 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import { Icon } from "../components/Icon";
 import {
   getDocuments,
-  searchDocuments,
   uploadDocuments,
 } from "../services/api";
 
 function formatFileSize(bytes) {
-  if (!Number.isFinite(bytes) || bytes < 0) return "";
+  if (!Number.isFinite(bytes) || bytes < 0) {
+    return "";
+  }
 
-  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024) {
+    return `${bytes} B`;
+  }
 
   if (bytes < 1024 * 1024) {
     return `${(bytes / 1024).toFixed(1)} KB`;
@@ -18,30 +21,55 @@ function formatFileSize(bytes) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export function KnowledgePage({ onAsk }) {
+function getFileType(filename = "") {
+  const extension = filename
+    .split(".")
+    .pop()
+    ?.toLowerCase();
+
+  const types = {
+    pdf: "PDF",
+    doc: "Word",
+    docx: "Word",
+    xls: "Excel",
+    xlsx: "Excel",
+    csv: "CSV",
+    txt: "Text",
+  };
+
+  return types[extension] || "Document";
+}
+
+function isUnsupportedFile(file) {
+  return (
+    file.type?.startsWith("audio/") ||
+    file.type?.startsWith("video/")
+  );
+}
+
+export function KnowledgePage() {
   const fileInput = useRef(null);
 
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [documentsError, setDocumentsError] = useState("");
-
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState(null);
-  const [searching, setSearching] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [dragging, setDragging] = useState(false);
 
   async function loadDocuments() {
     setLoading(true);
-    setError("");
     setDocumentsError("");
 
     try {
       const data = await getDocuments();
+
       setDocuments(data);
+      setError("");
     } catch (loadError) {
       const message =
-        loadError?.message || "Unable to load documents.";
+        loadError?.message ||
+        "Unable to load documents.";
 
       setError(message);
       setDocumentsError(message);
@@ -50,88 +78,145 @@ export function KnowledgePage({ onAsk }) {
     }
   }
 
-  // Initial document loading
   useEffect(() => {
     let cancelled = false;
 
-    getDocuments()
-      .then((data) => {
+    async function initializeDocuments() {
+      try {
+        const data = await getDocuments();
+
         if (cancelled) return;
 
         setDocuments(data);
         setDocumentsError("");
         setError("");
-        setLoading(false);
-      })
-      .catch((loadError) => {
+      } catch (loadError) {
         if (cancelled) return;
 
         const message =
-          loadError?.message || "Unable to load documents.";
+          loadError?.message ||
+          "Unable to load documents.";
 
         setError(message);
         setDocumentsError(message);
-        setLoading(false);
-      });
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    initializeDocuments();
 
     return () => {
       cancelled = true;
     };
   }, []);
 
-  async function handleUpload(event) {
-    const files = Array.from(event.target.files ?? []);
+  async function processFiles(files) {
+    if (!files.length) {
+      return;
+    }
 
-    event.target.value = "";
+    const supportedFiles = files.filter(
+      (file) => !isUnsupportedFile(file)
+    );
 
-    if (!files.length) return;
+    if (!supportedFiles.length) {
+      setError(
+        "Audio and video files are not supported. Please choose document files."
+      );
+      return;
+    }
+
+    if (supportedFiles.length !== files.length) {
+      setError(
+        "Some audio or video files were skipped. Only document files were added."
+      );
+    } else {
+      setError("");
+    }
 
     setUploading(true);
-    setError("");
 
     try {
-      await uploadDocuments(files);
-      await loadDocuments();
+      const uploadedDocuments =
+        await uploadDocuments(supportedFiles);
+
+      // Temporary frontend behaviour.
+      // Replace this with the real backend response
+      // when the document upload API is connected.
+      setDocuments((currentDocuments) => [
+        ...currentDocuments,
+        ...uploadedDocuments,
+      ]);
     } catch (uploadError) {
       setError(
-        uploadError?.message || "Unable to upload documents."
+        uploadError?.message ||
+          "Unable to upload documents."
       );
     } finally {
       setUploading(false);
     }
   }
 
-  async function handleSearch(event) {
+  async function handleUpload(event) {
+    const files = Array.from(
+      event.target.files ?? []
+    );
+
+    // Allows selecting the same file again later.
+    event.target.value = "";
+
+    await processFiles(files);
+  }
+
+  function handleDrop(event) {
     event.preventDefault();
+    setDragging(false);
 
-    const trimmedQuery = query.trim();
+    const files = Array.from(
+      event.dataTransfer.files ?? []
+    );
 
-    if (!trimmedQuery) return;
+    processFiles(files);
+  }
 
-    setSearching(true);
-    setError("");
-    setResults(null);
+  function handleDragOver(event) {
+    event.preventDefault();
+    setDragging(true);
+  }
 
-    try {
-      const data = await searchDocuments(trimmedQuery);
-      setResults(data);
-    } catch (searchError) {
-      setError(
-        searchError?.message || "Unable to search documents."
-      );
-    } finally {
-      setSearching(false);
+  function handleDragLeave(event) {
+    if (
+      !event.currentTarget.contains(
+        event.relatedTarget
+      )
+    ) {
+      setDragging(false);
+    }
+  }
+
+  function openFilePicker() {
+    if (!uploading) {
+      fileInput.current?.click();
     }
   }
 
   return (
-    <>
+    <div className="data-sources-page">
+      {/* ==============================
+          PAGE HEADER
+      ============================== */}
+
       <header className="page-header">
         <div className="breadcrumb">
           <span>Workspace</span>
+
           <Icon name="chevron" size={14} />
+
           <span className="breadcrumb-current">
-            Knowledge base
+            Data Sources
           </span>
         </div>
 
@@ -139,139 +224,187 @@ export function KnowledgePage({ onAsk }) {
           <div>
             <p className="eyebrow">YOUR SOURCES</p>
 
-            <h1>Knowledge base</h1>
+            <h1>Data Sources</h1>
 
             <p className="page-description">
-              Add documents, then search their contents or ask a
-              question.
+              Connect your business data so DOCIQ can
+              analyze it and generate useful insights.
             </p>
           </div>
-
-          <button
-            className="button button-primary"
-            onClick={() => fileInput.current?.click()}
-            disabled={uploading}
-          >
-            <Icon name="upload" size={17} />
-
-            {uploading ? "Uploading…" : "Add documents"}
-          </button>
-
-          <input
-            ref={fileInput}
-            className="visually-hidden"
-            type="file"
-            multiple
-            onChange={handleUpload}
-            aria-label="Choose documents to add"
-          />
         </div>
       </header>
 
       <div className="page-body">
-        {error && error !== documentsError && (
-          <div className="notice notice-error" role="alert">
+        {/* ==============================
+            ERROR NOTICE
+        ============================== */}
+
+        {error && (
+          <div
+            className="notice notice-error"
+            role="alert"
+          >
             <span>{error}</span>
 
             <button
+              type="button"
               className="text-button"
-              onClick={loadDocuments}
+              onClick={() => setError("")}
             >
-              Retry
+              Dismiss
             </button>
           </div>
         )}
 
-        <section
-          className="panel search-panel"
-          aria-labelledby="search-title"
-        >
+        {/* ==============================
+            DATA CONNECTION OPTIONS
+        ============================== */}
+
+        <section className="panel data-connection-panel">
           <div className="section-heading">
             <div>
-              <h2 id="search-title">
-                Search your sources
-              </h2>
+              <h2>Connect your data</h2>
 
               <p>
-                Find relevant passages across your connected
-                documents.
+                Choose how you want to provide data
+                to DOCIQ.
               </p>
             </div>
+          </div>
 
-            <span className="section-icon">
-              <Icon name="search" />
+          <div className="connection-grid">
+            {/* SQL DATABASE */}
+
+            <article className="connection-card connection-card-disabled">
+              <div className="connection-card-top">
+                <span className="section-icon">
+                  <Icon
+                    name="database"
+                    size={22}
+                  />
+                </span>
+
+                <span className="connection-badge coming-soon">
+                  Coming soon
+                </span>
+              </div>
+
+              <div className="connection-card-content">
+                <h3>SQL Database</h3>
+
+                <p>
+                  Connect your business database
+                  directly to DOCIQ for deeper
+                  analysis.
+                </p>
+
+                <span className="connection-types">
+                  MySQL · PostgreSQL · SQL Server
+                </span>
+              </div>
+            </article>
+
+            {/* COMPANY DOCUMENTS */}
+
+            <article className="connection-card connection-card-active">
+              <div className="connection-card-top">
+                <span className="section-icon">
+                  <Icon
+                    name="file"
+                    size={22}
+                  />
+                </span>
+
+                <span className="connection-badge available">
+                  Available
+                </span>
+              </div>
+
+              <div className="connection-card-content">
+                <h3>Company Documents</h3>
+
+                <p>
+                  Upload reports, spreadsheets and
+                  other business documents for DOCIQ
+                  to understand.
+                </p>
+
+                <span className="connection-types">
+                  PDF · Word · Excel · CSV · Text
+                </span>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        {/* ==============================
+            DOCUMENT UPLOAD AREA
+        ============================== */}
+
+        <section
+          className={`upload-dropzone ${
+            dragging ? "is-dragging" : ""
+          }`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          aria-label="Document upload area"
+        >
+          <div className="dropzone-icon">
+            <Icon name="upload" size={23} />
+          </div>
+
+          <div className="dropzone-content">
+            <h3>
+              {uploading
+                ? "Uploading your documents…"
+                : "Drop your files here"}
+            </h3>
+
+            <p>
+              Drag and drop files here, or choose
+              them from your computer.
+            </p>
+
+            <span>
+              Documents only · Multiple files
+              supported
             </span>
           </div>
 
-          <form
-            className="search-form"
-            onSubmit={handleSearch}
-          >
-            <Icon name="search" size={18} />
-
-            <input
-              aria-label="Search documents"
-              placeholder="Search documents…"
-              value={query}
-              onChange={(event) =>
-                setQuery(event.target.value)
-              }
-            />
-
-            <button
-              className="button button-dark"
-              disabled={
-                searching || !query.trim()
-              }
-            >
-              {searching ? "Searching…" : "Search"}
-            </button>
-          </form>
-
-          {results && (
-            <div
-              className="search-results"
-              aria-live="polite"
-            >
-              <h3>
-                {results.length
-                  ? "Results"
-                  : "No matching passages"}
-              </h3>
-
-              {results.map((result, index) => (
-                <article
-                  className="result-item"
-                  key={result.id ?? index}
-                >
-                  <div className="result-title">
-                    <Icon name="file" size={16} />
-
-                    <strong>
-                      {result.title ??
-                        result.filename ??
-                        "Untitled source"}
-                    </strong>
-                  </div>
-
-                  <p>
-                    {result.snippet ??
-                      result.content ??
-                      "No passage text was provided."}
-                  </p>
-                </article>
-              ))}
-            </div>
-          )}
-
           <button
-            className="text-link"
-            onClick={onAsk}
+            type="button"
+            className="button button-primary"
+            onClick={openFilePicker}
+            disabled={uploading}
           >
-            Ask a question instead
-            <Icon name="arrow" size={15} />
+            <Icon name="upload" size={16} />
+
+            {uploading
+              ? "Uploading…"
+              : "Choose files"}
           </button>
+
+          {/* 
+            This is the ONLY actual file input
+            on the page.
+
+            It is intentionally hidden because
+            the custom button above controls it.
+          */}
+          <input
+            ref={fileInput}
+            type="file"
+            multiple
+            hidden
+            onChange={handleUpload}
+            aria-label="Choose business documents"
+          />
         </section>
+
+        {/* ==============================
+            CONNECTED DOCUMENTS
+        ============================== */}
 
         <section
           className="documents-section"
@@ -279,35 +412,45 @@ export function KnowledgePage({ onAsk }) {
         >
           <div className="documents-heading">
             <div>
+              <p className="eyebrow">
+                CONNECTED FILES
+              </p>
+
               <h2 id="documents-title">
                 Documents
               </h2>
 
               <p>
-                Files available in this workspace
+                Files currently available to DOCIQ.
               </p>
             </div>
 
             {!loading && !documentsError && (
               <span className="document-count">
-                {documents.length} documents
+                {documents.length}{" "}
+                {documents.length === 1
+                  ? "document"
+                  : "documents"}
               </span>
             )}
           </div>
+
+          {/* LOADING */}
 
           {loading ? (
             <div className="panel state-panel">
               <span className="loading-indicator" />
 
-              <p>
-                Loading documents…
-              </p>
+              <p>Loading documents…</p>
             </div>
           ) : documentsError ? (
+            /* ERROR */
+
             <div className="panel state-panel">
               <p>{documentsError}</p>
 
               <button
+                type="button"
                 className="text-button"
                 onClick={loadDocuments}
               >
@@ -315,59 +458,94 @@ export function KnowledgePage({ onAsk }) {
               </button>
             </div>
           ) : documents.length ? (
-            <div className="panel document-list">
-              {documents.map((document, index) => (
-                <div
-                  className="document-row"
-                  key={document.id ?? index}
-                >
-                  <span className="file-icon">
-                    <Icon name="file" size={18} />
-                  </span>
+            /* DOCUMENT LIST */
 
-                  <div className="document-info">
-                    <strong>
-                      {document.name ??
-                        document.filename ??
-                        "Untitled document"}
-                    </strong>
+            <div className="document-list">
+              {documents.map(
+                (document, index) => {
+                  const filename =
+                    document.name ??
+                    document.filename ??
+                    "Untitled document";
 
-                    <span>
-                      {document.status ?? "Available"}
+                  const status =
+                    document.status ??
+                    "Available";
 
-                      {Number.isFinite(document.size) &&
-                        ` · ${formatFileSize(
-                          document.size
-                        )}`}
-                    </span>
-                  </div>
+                  return (
+                    <div
+                      className="document-card"
+                      key={
+                        document.id ?? index
+                      }
+                    >
+                      <span className="file-icon">
+                        <Icon
+                          name="file"
+                          size={20}
+                        />
+                      </span>
 
-                  <Icon
-                    name="chevron"
-                    size={16}
-                    className="row-chevron"
-                  />
-                </div>
-              ))}
+                      <div className="document-info">
+                        <strong>
+                          {filename}
+                        </strong>
+
+                        <span>
+                          {getFileType(filename)}
+                          {" · "}
+                          {status}
+
+                          {Number.isFinite(
+                            document.size
+                          ) &&
+                            ` · ${formatFileSize(
+                              document.size
+                            )}`}
+                        </span>
+                      </div>
+
+                      <span className="document-status">
+                        <span className="status-dot" />
+
+                        {status}
+                      </span>
+
+                      <Icon
+                        name="chevron"
+                        size={16}
+                        className="row-chevron"
+                      />
+                    </div>
+                  );
+                }
+              )}
             </div>
           ) : (
+            /* EMPTY STATE */
+
             <div className="panel empty-state">
               <span className="empty-icon">
-                <Icon name="book" size={22} />
+                <Icon
+                  name="file"
+                  size={24}
+                />
               </span>
 
-              <h3>No documents yet</h3>
+              <h3>
+                No documents connected yet
+              </h3>
 
               <p>
-                Add a source document to make its contents
-                searchable in this workspace.
+                Upload your first business
+                document to make it available
+                to DOCIQ.
               </p>
 
               <button
+                type="button"
                 className="button button-outline"
-                onClick={() =>
-                  fileInput.current?.click()
-                }
+                onClick={openFilePicker}
                 disabled={uploading}
               >
                 <Icon name="plus" size={16} />
@@ -378,6 +556,6 @@ export function KnowledgePage({ onAsk }) {
           )}
         </section>
       </div>
-    </>
+    </div>
   );
 }

@@ -60,3 +60,123 @@ Recent conversations
 
 [question]                         [date]
 [question]                         [date]
+
+
+Knowledege Base page :
+
+YOUR SOURCES
+Knowledge base
+Connect the data DOCIQ uses to understand your business.
+
+┌──────────────────────────────────────────────────────────────┐
+│  Data sources                                  [+ Add source]│
+│                                                              │
+│  ┌──────────────────────┐  ┌──────────────────────────────┐ │
+│  │  🗄 SQL Database      │  │  📄 Company Documents        │ │
+│  │                      │  │                              │ │
+│  │  Connect MySQL,      │  │  PDF, Word, Excel, CSV...    │ │
+│  │  PostgreSQL, etc.    │  │                              │ │
+│  │                      │  │  [ Upload documents ]         │ │
+│  │  Not connected       │  │                              │ │
+│  └──────────────────────┘  └──────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────┘
+
+Documents                                             2 files
+
+┌──────────────────────────────────────────────────────────────┐
+│ 📄  GreenLeaf Retail Sales Report.pdf          2.3 MB       │
+│     PDF • Available                           ⋮              │
+├──────────────────────────────────────────────────────────────┤
+│ 📊  Customer Analysis.xlsx                     869 KB        │
+│     Excel • Available                          ⋮              │
+└──────────────────────────────────────────────────────────────┘
+currently the sql connection button is static comming soon after building tthe backend we have to update like these states :
+
+Connect database
+      ↓
+Choose SQL provider
+      ↓
+Host / Port / Database
+      ↓
+Credentials
+      ↓
+Test connection
+      ↓
+Connected
+
+
+Analysis Page:
+
+┌──────────────────────────────────────────────────────────────┐
+│ Analysis                                      [New Analysis] │
+│ Explore your business data and discover useful insights.     │
+│                                                              │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │ DATASET                                                  │ │
+│ │ GreenLeaf Retail Sales Report.pdf          [Change]      │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│                                                              │
+│ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐          │
+│ │ Overview     │ │ Trends       │ │ Customers    │          │
+│ │ 📊          │ │ 📈           │ │ 👥           │          │
+│ └──────────────┘ └──────────────┘ └──────────────┘          │
+│                                                              │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │ Analysis Results                                         │ │
+│ │                                                          │ │
+│ │  Revenue       Orders       Customers       Growth       │ │
+│ │  ₹24.5L        1,284        842             +12.4%       │ │
+│ │                                                          │ │
+│ │  [Charts / tables / insights]                            │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│                                                              │
+│ ┌────────────────────────────┐ ┌──────────────────────────┐ │
+│ │ Key Insights               │ │ Recommendations          │ │
+│ │ • Revenue increased...     │ │ • Focus on...            │ │
+│ │ • Product X is...          │ │ • Consider...            │ │
+│ └────────────────────────────┘ └──────────────────────────┘ │
+└──────────────────────────────────────────────────────────────┘
+
+Components I'd include
+1. Dataset selector
+- Which uploaded document/data source is being analyzed
+- File name/type
+- Change dataset button
+2. Analysis types
+Cards/tabs such as:
+- Overview — general business performance
+- Trends — revenue, sales, customers over time
+- Products — best/worst performing products
+- Customers — customer behaviour/segments
+- Financial — revenue, expenses, profit, margins
+- Custom Analysis — eventually let the user specify what they want
+3. KPI cards
+Depending on the dataset:
+- Revenue
+- Orders
+- Customers
+- Profit
+- Growth
+- Average Order Value
+These should be dynamic, not hardcoded demo numbers.
+4. Visual analysis area
+This is the main part of the page:
+- Line charts
+- Bar charts
+- Pie/donut charts where appropriate
+- Comparison charts
+- Tables
+5. AI-generated insights
+A dedicated section like:
+Key Insights
+
+DOCIQ explains what the numbers actually mean in simple business language.
+Example:
+Revenue increased 18% in Q3, primarily driven by higher sales in Category A.
+
+6. Recommendations
+Separate insights from actions:
+Recommended Actions
+• Increase inventory for Category A
+• Review declining sales in Category C
+• Investigate customers with reduced purchase frequency

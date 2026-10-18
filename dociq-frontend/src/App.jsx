@@ -6,6 +6,7 @@ import AppShell from "./components/AppShell";
 import DashboardPage from "./pages/DashboardPage";
 import AIAnalystPage from "./pages/AIAnalystPage";
 import { KnowledgePage } from "./pages/KnowledgePage";
+import AnalysisPage from "./pages/AnalysisPage";
 
 export default function App() {
   const [session, setSession] = useState(() => {
@@ -54,7 +55,7 @@ export default function App() {
         return <AIAnalystPage />;
 
       case "Analysis":
-        return <div>Analysis page coming next.</div>;
+        return <AnalysisPage />;
 
       case "Reports":
         return <div>Reports page coming next.</div>;

@@ -30,7 +30,7 @@ export default function AIAnalystPage() {
   }
 
   return (
-    <>
+    <div className="ai-analyst-page">
       <header className="page-header">
         <div className="breadcrumb">
           <span>Workspace</span>
@@ -181,6 +181,6 @@ export default function AIAnalystPage() {
         </section>
 
       </div>
-    </>
+    </div>
   );
 }
