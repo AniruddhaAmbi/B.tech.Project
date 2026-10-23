@@ -1,0 +1,156 @@
+DOCIQ FRONTEND PLAN
+====================
+
+Project: DOCIQ
+Purpose: Generic AI-powered data analysis tool for a single business deployment.
+Important architecture note:
+- One DOCIQ deployment belongs to one business.
+- Multiple employees/users can securely access the same deployment.
+- Different businesses are handled through separate deployments, not a shared multi-tenant UI.
+- Dashboard numbers, charts, tables, files, analysis results, and activity are dynamic backend data.
+- The reference UI is only a design/layout reference; do not hardcode its sample numbers.
+
+DESIGN SYSTEM
+-------------
+Primary color palette:
+- Mint Whisper: #D1F2EB
+- Emerald Green: #50C878
+- Royal Amethyst: #0B6E4F
+- Dark Evergreen: #013220
+
+Use the palette consistently for:
+- Backgrounds
+- Navigation
+- Buttons
+- Cards
+- Charts
+- Status indicators
+- AI analyst components
+
+Visual direction:
+- Clean modern SaaS dashboard
+- Rounded cards
+- Spacious layout
+- Professional business/analytics feel
+- Responsive desktop/tablet/mobile
+- Reference image is the visual direction, not a finished page
+
+FRONTEND BUILD ORDER
+--------------------
+Phase 1 — Foundation
+1. React + Vite setup
+2. Tailwind CSS setup
+3. Global styles and DOCIQ color/theme tokens
+4. Typography, spacing and reusable UI rules
+5. App routing
+6. Reusable components
+
+Phase 2 — Application Shell
+1. Sidebar navigation
+2. Top navigation/header
+3. User profile menu
+4. Notifications
+5. Responsive/mobile navigation
+6. Global loading/error states
+
+Phase 3 — Authentication
+1. Login
+2. Forgot password
+3. Reset password
+4. Session/loading state
+5. Protected application routes
+
+Phase 4 — Core Pages
+1. Dashboard
+2. AI Analyst
+3. Data Sources
+4. Analysis
+5. Reports
+6. Settings
+
+Phase 5 — Important Components
+1. Metric cards
+2. Data tables
+3. Charts
+4. File cards
+5. Analysis pipeline/progress component
+6. AI chat messages
+7. Suggested questions
+8. Data preview
+9. Filters
+10. Empty states
+11. Error states
+12. Confirmation dialogs
+13. Toast/notification system
+
+PHASE 6 — SECURITY/ACCESS UI
+----------------------------
+Because each deployment belongs to one business:
+- Business/workspace identity
+- Employee/user management
+- User roles and permissions
+- Active sessions
+- Logout
+- Data-source connection status
+- Security/status indicators
+
+PHASE 7 — BACKEND INTEGRATION READY
+------------------------------------
+Frontend should be designed so hardcoded data can later be replaced by APIs.
+
+Examples:
+- Dashboard metrics -> API
+- Chat messages -> AI/API
+- Data sources -> API
+- Analysis jobs -> API
+- Reports -> API
+- Users/roles -> API
+
+Do not tightly couple UI components to fake/demo data.
+
+FINAL PAGE STRUCTURE
+--------------------
+/login
+/forgot-password
+/reset-password
+
+/app/dashboard
+/app/analyst
+/app/data-sources
+/app/analysis
+/app/reports
+/app/settings
+
+FIRST IMPLEMENTATION TARGET
+---------------------------
+Start with:
+1. React/Vite project
+2. Tailwind
+3. DOCIQ theme
+4. App Shell
+5. Sidebar
+6. Topbar
+7. Routing
+8. Empty Dashboard page
+
+After the shell is stable, build each page individually.
+
+REFERENCE UI RULE
+-----------------
+Use the provided DOCIQ reference image for:
+- Layout inspiration
+- Color usage
+- Card styling
+- Navigation style
+- AI Analyst panel style
+- Overall visual language
+
+Do NOT copy:
+- Sample business numbers
+- Sample charts
+- Sample products
+- Sample names
+- Fake activity
+- Static analysis results
+
+All business data must eventually come from the connected business data/backend.

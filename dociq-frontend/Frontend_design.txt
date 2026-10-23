@@ -1,0 +1,233 @@
+DOCIQ App Shell make it responsive: 
+Desktop: full sidebar
+Tablet: collapsed sidebar
+Mobile: sidebar becomes a drawer/bottom navigation
+
+┌──────────────┬─────────────────────────────┐
+│              │ Topbar                      │
+│   Sidebar    ├─────────────────────────────┤
+│              │                             │
+│ Dashboard    │                             │
+│ AI Analyst   │      Page Content           │
+│ Data Sources │                             │
+│ Analysis     │                             │
+│ Reports      │                             │
+│ Settings     │                             │
+│              │                             │
+└──────────────┴─────────────────────────────┘
+
+
+We should not build Dashboard content yet.
+
+Our immediate coding sequence
+
+Step 1 → AppShell.jsx
+Step 2 → Sidebar.jsx
+Step 3 → Topbar.jsx
+Step 4 → responsive behavior
+Step 5 → DOCIQ colors/theme
+Step 6 → routing between empty pages
+
+Once that works, every page we build afterward automatically gets the same professional shell.
+
+So yes — let's start with the App Shell.
+
+
+
+AI Analyst page:
+
+AI ANALYST
+
+Ask DOCIQ
+────────────────────────────────────────────
+
+"Ask anything about your business data..."
+
+                         [Ask AI]
+
+────────────────────────────────────────────
+
+Suggested questions
+
+• Why did revenue change this month?
+• Which products are performing best?
+• Who are my highest-value customers?
+• What should I focus on this month?
+
+────────────────────────────────────────────
+
+Recent conversations
+
+[question]                         [date]
+[question]                         [date]
+
+
+Knowledege Base page :
+
+YOUR SOURCES
+Knowledge base
+Connect the data DOCIQ uses to understand your business.
+
+┌──────────────────────────────────────────────────────────────┐
+│  Data sources                                  [+ Add source]│
+│                                                              │
+│  ┌──────────────────────┐  ┌──────────────────────────────┐ │
+│  │  🗄 SQL Database      │  │  📄 Company Documents        │ │
+│  │                      │  │                              │ │
+│  │  Connect MySQL,      │  │  PDF, Word, Excel, CSV...    │ │
+│  │  PostgreSQL, etc.    │  │                              │ │
+│  │                      │  │  [ Upload documents ]         │ │
+│  │  Not connected       │  │                              │ │
+│  └──────────────────────┘  └──────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────┘
+
+Documents                                             2 files
+
+┌──────────────────────────────────────────────────────────────┐
+│ 📄  GreenLeaf Retail Sales Report.pdf          2.3 MB       │
+│     PDF • Available                           ⋮              │
+├──────────────────────────────────────────────────────────────┤
+│ 📊  Customer Analysis.xlsx                     869 KB        │
+│     Excel • Available                          ⋮              │
+└──────────────────────────────────────────────────────────────┘
+currently the sql connection button is static comming soon after building tthe backend we have to update like these states :
+
+Connect database
+      ↓
+Choose SQL provider
+      ↓
+Host / Port / Database
+      ↓
+Credentials
+      ↓
+Test connection
+      ↓
+Connected
+
+
+Analysis Page:
+
+┌──────────────────────────────────────────────────────────────┐
+│ Analysis                                      [New Analysis] │
+│ Explore your business data and discover useful insights.     │
+│                                                              │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │ DATASET                                                  │ │
+│ │ GreenLeaf Retail Sales Report.pdf          [Change]      │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│                                                              │
+│ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐          │
+│ │ Overview     │ │ Trends       │ │ Customers    │          │
+│ │ 📊          │ │ 📈           │ │ 👥           │          │
+│ └──────────────┘ └──────────────┘ └──────────────┘          │
+│                                                              │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │ Analysis Results                                         │ │
+│ │                                                          │ │
+│ │  Revenue       Orders       Customers       Growth       │ │
+│ │  ₹24.5L        1,284        842             +12.4%       │ │
+│ │                                                          │ │
+│ │  [Charts / tables / insights]                            │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│                                                              │
+│ ┌────────────────────────────┐ ┌──────────────────────────┐ │
+│ │ Key Insights               │ │ Recommendations          │ │
+│ │ • Revenue increased...     │ │ • Focus on...            │ │
+│ │ • Product X is...          │ │ • Consider...            │ │
+│ └────────────────────────────┘ └──────────────────────────┘ │
+└──────────────────────────────────────────────────────────────┘
+
+Components I'd include
+1. Dataset selector
+- Which uploaded document/data source is being analyzed
+- File name/type
+- Change dataset button
+2. Analysis types
+Cards/tabs such as:
+- Overview — general business performance
+- Trends — revenue, sales, customers over time
+- Products — best/worst performing products
+- Customers — customer behaviour/segments
+- Financial — revenue, expenses, profit, margins
+- Custom Analysis — eventually let the user specify what they want
+3. KPI cards
+Depending on the dataset:
+- Revenue
+- Orders
+- Customers
+- Profit
+- Growth
+- Average Order Value
+These should be dynamic, not hardcoded demo numbers.
+4. Visual analysis area
+This is the main part of the page:
+- Line charts
+- Bar charts
+- Pie/donut charts where appropriate
+- Comparison charts
+- Tables
+5. AI-generated insights
+A dedicated section like:
+Key Insights
+
+DOCIQ explains what the numbers actually mean in simple business language.
+Example:
+Revenue increased 18% in Q3, primarily driven by higher sales in Category A.
+
+6. Recommendations
+Separate insights from actions:
+Recommended Actions
+• Increase inventory for Category A
+• Review declining sales in Category C
+• Investigate customers with reduced purchase frequency
+
+
+Settings 
+Settings
+Manage your DOCIQ workspace, account, and preferences.
+
+┌─────────────────────────────────────────────────────────────┐
+│ Workspace                                                   │
+│ Manage your business workspace settings.                   │
+│                                                             │
+│ Business name       GreenLeaf Retail                       │
+│ Workspace type      Business                               │
+│                                                             │
+│                              [Save changes]                 │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ Account                                                     │
+│ Manage your personal DOCIQ account.                        │
+│                                                             │
+│ Name                DOCIQ User                             │
+│ Role                Owner                                  │
+│ Email               user@example.com                       │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ Analysis Preferences                                        │
+│ Control how DOCIQ prepares and presents analysis.           │
+│                                                             │
+│ Default analysis view        Overview              ›        │
+│ Insight detail level         Standard              ›        │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ Notifications                                                │
+│ Choose which DOCIQ notifications you receive.               │
+│                                                             │
+│ Analysis completed                         [ ON ]           │
+│ Report generated                           [ ON ]           │
+│ Data source updates                        [ ON ]           │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ Security                                                     │
+│ Manage your account security and access.                    │
+│                                                             │
+│ Password                                      [Change]      │
+│ Active sessions                               [Manage]      │
+│ Two-factor authentication                     [Coming soon] │
+└─────────────────────────────────────────────────────────────┘

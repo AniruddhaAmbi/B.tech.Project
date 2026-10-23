@@ -1,0 +1,7 @@
+USER
+Email: user@dociq.local
+Password: DocIQ@123
+
+ADMIN
+Email: admin@dociq.local
+Password: Admin@123
