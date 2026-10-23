@@ -1,0 +1,47 @@
+Part 1: FastAPI Foundation & MongoDB Atlas Integration
+Goal: Set up the project skeleton, connect FastAPI to MongoDB Atlas web cluster, and establish data models for workspaces, document sources, and analysis histories.
+
+What we build:
+
+FastAPI application core (main.py, CORS, settings).
+
+MongoDB Atlas connection via Motor (Async Python driver).
+
+Base schemas (Pydantic models) matching your workspace and dataset selectors.
+
+
+
+Part 2: Multi-Source Ingestion Engine (Files + SQL Connector & Text-to-SQL)
+Goal: Power the Data Sources page. Handle parsing for unstructured files (PDF, Word, Excel, CSV, Text) and lay down the infrastructure for connecting SQL databases with a Text-to-SQL query agent.
+
+What we build:
+
+Document extraction service (PyPDF2/pdfplumber, python-docx, pandas for Excel/CSV).
+
+SQL connection manager and Text-to-SQL translation engine (using an LLM to dynamically generate and execute safe read-only queries against connected relational databases).
+
+
+
+Part 3: Hybrid Retrieval & AI Analyst Engine (Pinecone + RAG)
+Goal: Power the AI Analyst page and the metrics displayed on your Dashboard. Process chunks into Pinecone and run hybrid queries combining vector search with structured metrics.
+
+What we build:
+
+Text chunking and embedding pipeline (storing vectors in Pinecone).
+
+Context-aware retrieval system that fetches matching chunks or queries SQL databases depending on the user's selected dataset.
+
+LLM synthesis layer to answer "Why did revenue change this month?", "Who are my highest-value customers?", etc.
+
+
+
+Part 4: Dynamic Reports & Dashboard JSON APIs
+Goal: Power the Analysis and Reports pages. Generate structured, business-focused insights (Business Overview, Performance Report, Analysis Summary) and serve them as clean JSON payloads ready for your frontend components.
+
+What we build:
+
+Report generation endpoints that summarize data into structured formats.
+
+History logging so generated reports show up seamlessly under the "Report History" section.
+
+End-to-end integration testing.
