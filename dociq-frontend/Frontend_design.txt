@@ -180,3 +180,54 @@ Recommended Actions
 • Increase inventory for Category A
 • Review declining sales in Category C
 • Investigate customers with reduced purchase frequency
+
+
+Settings 
+Settings
+Manage your DOCIQ workspace, account, and preferences.
+
+┌─────────────────────────────────────────────────────────────┐
+│ Workspace                                                   │
+│ Manage your business workspace settings.                   │
+│                                                             │
+│ Business name       GreenLeaf Retail                       │
+│ Workspace type      Business                               │
+│                                                             │
+│                              [Save changes]                 │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ Account                                                     │
+│ Manage your personal DOCIQ account.                        │
+│                                                             │
+│ Name                DOCIQ User                             │
+│ Role                Owner                                  │
+│ Email               user@example.com                       │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ Analysis Preferences                                        │
+│ Control how DOCIQ prepares and presents analysis.           │
+│                                                             │
+│ Default analysis view        Overview              ›        │
+│ Insight detail level         Standard              ›        │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ Notifications                                                │
+│ Choose which DOCIQ notifications you receive.               │
+│                                                             │
+│ Analysis completed                         [ ON ]           │
+│ Report generated                           [ ON ]           │
+│ Data source updates                        [ ON ]           │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ Security                                                     │
+│ Manage your account security and access.                    │
+│                                                             │
+│ Password                                      [Change]      │
+│ Active sessions                               [Manage]      │
+│ Two-factor authentication                     [Coming soon] │
+└─────────────────────────────────────────────────────────────┘

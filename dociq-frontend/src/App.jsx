@@ -7,6 +7,8 @@ import DashboardPage from "./pages/DashboardPage";
 import AIAnalystPage from "./pages/AIAnalystPage";
 import { KnowledgePage } from "./pages/KnowledgePage";
 import AnalysisPage from "./pages/AnalysisPage";
+import ReportPage from "./pages/ReportPage";
+import SettingsPage from "./pages/SettingsPage";
 
 export default function App() {
   const [session, setSession] = useState(() => {
@@ -58,10 +60,10 @@ export default function App() {
         return <AnalysisPage />;
 
       case "Reports":
-        return <div>Reports page coming next.</div>;
+        return <ReportPage />;
 
       case "Settings":
-        return <div>Settings page coming next.</div>;
+        return <SettingsPage />;
 
       default:
         return <DashboardPage user={session} />;
