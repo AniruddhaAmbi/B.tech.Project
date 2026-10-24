@@ -6,6 +6,11 @@ from app.routers import sources
 from app.routers import sql_analyst
 from app.routers import reports
 from app.routers.analyst_test import router as test_router
+from app.routers import dashboard
+from app.routers import documents
+from app.routers import ai
+from app.routers import sql_analyst
+from app.routers import analysis
 
 app = FastAPI(
     title="DocIQ Backend API",
@@ -51,3 +56,8 @@ app.include_router(sources.router)
 app.include_router(sql_analyst.router)
 app.include_router(reports.router)
 app.include_router(test_router)
+app.include_router(sql_analyst.router)
+app.include_router(dashboard.router)
+app.include_router(documents.router)
+app.include_router(ai.router)
+app.include_router(analysis.router)

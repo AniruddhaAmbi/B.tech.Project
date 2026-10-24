@@ -2,10 +2,10 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from app.services.sql_manager import SQLManagerService
 
-router = APIRowner = APIRouter(prefix="/api/sql", tags=["SQL Analytics"])
+router = APIRouter(prefix="/api/sql", tags=["SQL Analytics"])
 
 class SQLQueryRequest(BaseModel):
-    db_url: str  # e.g., sqlite:///./test.db or postgresql://user:pass@localhost/db
+    db_url: str = "sqlite:///./test/test.db"  # Defaults directly to your test.db inside test/
     question: str
 
 @router.post("/query")
